@@ -13,23 +13,50 @@ cd AV3/aerocode-av3
 
 ### 2\. Configurar o Banco de Dados (MySQL)
 
-**Atenção:** Antes de rodar o código, você precisa preparar o seu banco de dados.
+**⚠️ IMPORTANTE:** Antes de rodar o código, você precisa configurar o MySQL corretamente.
 
-1.  **Inicie o MySQL:** Certifique-se de que o serviço do MySQL está rodando no seu computador (via XAMPP, Workbench, Docker ou Serviço do Windows).
-2.  **Crie o Schema:** Abra seu gerenciador (ex: MySQL Workbench ou DBeaver), abra uma nova query e execute:
+> **📖 Problemas com MySQL ou VSCode?** Leia o [**Guia Completo de Configuração MySQL**](aerocode-av3/backend/MYSQL_SETUP.md) para instruções detalhadas e resolução de problemas.
+
+#### Passos Rápidos:
+
+1.  **Inicie o MySQL:** Certifique-se de que o serviço do MySQL está rodando no seu computador:
+    - **XAMPP:** Abra o painel e clique em "Start" no módulo MySQL
+    - **Windows:** Execute `net start MySQL80` como Administrador
+    - **Linux/Mac:** Execute `sudo systemctl start mysql` ou `brew services start mysql`
+
+2.  **Crie o Banco de Dados:** 
+    
+    Abra MySQL Workbench, phpMyAdmin ou terminal e execute:
     ```sql
-    CREATE DATABASE aerocode;
-    USE aerocode;
+    CREATE DATABASE IF NOT EXISTS aerocode;
     ```
-3.  **Configure a Conexão:**
-      * Vá até a pasta `backend/`.
-      * Crie um arquivo chamado `.env` (você pode copiar o `.env.example`).
-      * Edite a variável `DATABASE_URL` com seu usuário e senha do MySQL:
-    <!-- end list -->
+
+3.  **Configure o arquivo .env:**
+    
+    - Vá até a pasta `backend/`
+    - Copie o arquivo de exemplo:
+      ```bash
+      cp .env.example .env
+      ```
+    - Edite o arquivo `.env` com suas credenciais MySQL:
+    
+    **Para XAMPP (sem senha):**
+    ```env
+    DATABASE_URL="mysql://root:@localhost:3306/aerocode"
+    JWT_SECRET="segredo-av3-fatec"
+    PORT=3000
+    ```
+    
+    **Para MySQL com senha:**
     ```env
     DATABASE_URL="mysql://root:SUA_SENHA@localhost:3306/aerocode"
     JWT_SECRET="segredo-av3-fatec"
     PORT=3000
+    ```
+    
+    **Exemplo:** Se sua senha é `12345`:
+    ```env
+    DATABASE_URL="mysql://root:12345@localhost:3306/aerocode"
     ```
 
 ### 3\. Iniciar o Backend (Porta 3000)
@@ -105,6 +132,26 @@ aerocode-av3/
   * **Monitoramento de Performance:** Middleware personalizado que mede Latência, Tempo de Processamento e Tempo de Resposta em tempo real.
   * **Testes de Carga:** Script automatizado (`tests/loadTest.js`) para simular acessos concorrentes (1, 5 e 10 usuários simultâneos).
   * **Dashboard Interativo:** Gráficos visuais utilizando a biblioteca `Recharts`.
+
+-----
+
+## 🐛 Resolução de Problemas
+
+### ❌ Erro: "Can't connect to MySQL server"
+
+**Solução:** O MySQL não está rodando. Inicie o serviço conforme sua instalação (veja passo 2.1 acima).
+
+### ❌ Erro: "Access denied for user 'root'"
+
+**Solução:** Senha incorreta no arquivo `.env`. Verifique e corrija a senha do MySQL.
+
+### ❌ Erro: "Unknown database 'aerocode'"
+
+**Solução:** Execute o comando `CREATE DATABASE IF NOT EXISTS aerocode;` no MySQL.
+
+### 📖 Mais problemas?
+
+Consulte o [**Guia Completo de Configuração MySQL**](aerocode-av3/backend/MYSQL_SETUP.md) para mais soluções e dicas de configuração do VSCode.
 
 -----
 

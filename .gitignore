@@ -1,3 +1,38 @@
 aerocode-av3/backend/node_modules/
 aerocode-av3/frontend/node_modules/
 aerocode-av3/node_modules/
+
+# Environment variables (segurança)
+aerocode-av3/backend/.env
+aerocode-av3/frontend/.env
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+aerocode-av3/backend/dist/
+aerocode-av3/frontend/dist/
+aerocode-av3/frontend/build/
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json.example
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Prisma
+aerocode-av3/backend/prisma/dev.db
+aerocode-av3/backend/prisma/dev.db-journal
