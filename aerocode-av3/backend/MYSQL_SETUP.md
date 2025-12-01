@@ -109,6 +109,20 @@ npx prisma db seed
 
 ### 5. Testar a conexão
 
+Você pode testar a conexão de duas formas:
+
+#### Opção A: Script de Teste Rápido
+```bash
+node test-mysql-connection.js
+```
+
+Este script verifica:
+- ✅ Se as configurações do .env estão corretas
+- ✅ Se o MySQL está acessível
+- ✅ Se o banco de dados existe
+- ✅ Se as tabelas foram criadas
+
+#### Opção B: Prisma Studio
 ```bash
 npx prisma studio
 ```

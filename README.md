@@ -5,10 +5,14 @@ Aplicação web full-stack desenvolvida para a avaliação AV3 da FATEC. O proje
 
 ## 🚀 Guia Rápido (Quick Start)
 
+> **💡 Dica:** Use o script de setup automático para configurar o projeto rapidamente!
+> - **Linux/Mac:** `./setup.sh`
+> - **Windows:** `setup.bat`
+
 ### 1. Clonar o Repositório
 ```bash
 git clone [https://github.com/JoaooMoura/AV3.git](https://github.com/JoaooMoura/AV3.git)
-cd AV3/aerocode-av3
+cd AV3
 ````
 
 ### 2\. Configurar o Banco de Dados (MySQL)
