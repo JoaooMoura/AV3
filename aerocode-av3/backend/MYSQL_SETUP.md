@@ -210,30 +210,19 @@ Instale essas extensões para facilitar o trabalho com MySQL:
 
 ## 📱 Teste Rápido de Conexão
 
-Execute este script Node.js para testar:
+Use o script de teste fornecido no projeto:
 
-```javascript
-// test-connection.js
-const mysql = require('mysql2/promise');
-
-async function testConnection() {
-  try {
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '', // Sua senha aqui
-      database: 'aerocode'
-    });
-    
-    console.log('✅ Conexão bem-sucedida!');
-    await connection.end();
-  } catch (error) {
-    console.error('❌ Erro na conexão:', error.message);
-  }
-}
-
-testConnection();
+```bash
+cd aerocode-av3/backend
+node test-mysql-connection.js
 ```
+
+Este script irá:
+- ✅ Verificar suas configurações do `.env`
+- ✅ Testar a conexão com o MySQL
+- ✅ Verificar se o banco de dados existe
+- ✅ Contar registros nas tabelas (se existirem)
+- ❌ Fornecer diagnóstico detalhado em caso de erro
 
 ## 📚 Recursos Adicionais
 

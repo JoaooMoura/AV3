@@ -7,7 +7,5 @@
   "files.associations": {
     "*.prisma": "prisma"
   },
-  "terminal.integrated.defaultProfile.windows": "Git Bash",
-  "terminal.integrated.env.windows": {},
   "mysql.enableTelemetry": false
 }

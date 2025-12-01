@@ -18,16 +18,20 @@ async function testConnection() {
   
   // Parse DATABASE_URL para mostrar informações (sem senha)
   const dbUrl = process.env.DATABASE_URL || '';
-  const urlMatch = dbUrl.match(/mysql:\/\/([^:]+):([^@]*)@([^:]+):(\d+)\/(.+)/);
   
-  if (urlMatch) {
-    const [, user, , host, port, database] = urlMatch;
+  try {
+    const url = new URL(dbUrl);
+    const user = url.username;
+    const host = url.hostname;
+    const port = url.port;
+    const database = url.pathname.substring(1); // Remove leading slash
+    
     console.log(`   👤 Usuário: ${user}`);
     console.log(`   🏠 Host: ${host}`);
     console.log(`   🔌 Porta: ${port}`);
     console.log(`   💾 Banco: ${database}`);
-    console.log(`   🔐 Senha: ${'*'.repeat(8)} (oculta)\n`);
-  } else {
+    console.log(`   🔐 Senha: ****** (oculta)\n`);
+  } catch (error) {
     console.error('❌ DATABASE_URL não está configurada corretamente!');
     console.log('   Verifique o arquivo .env\n');
     process.exit(1);

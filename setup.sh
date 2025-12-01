@@ -81,6 +81,7 @@ if [ $? -eq 0 ]; then
     echo -e "${GREEN}✅ Dependências do backend instaladas!${NC}"
 else
     echo -e "${RED}❌ Erro ao instalar dependências do backend${NC}"
+    cd ../..
     exit 1
 fi
 
@@ -112,6 +113,7 @@ if [ $? -eq 0 ]; then
     echo -e "${GREEN}✅ Dependências do frontend instaladas!${NC}"
 else
     echo -e "${RED}❌ Erro ao instalar dependências do frontend${NC}"
+    cd ../..
     exit 1
 fi
 

@@ -66,9 +66,10 @@ if not exist ".env" (
 REM Instalar dependências
 echo.
 echo Instalando dependencias do backend...
-call npm install
+npm install
 if %errorlevel% neq 0 (
     echo [ERRO] Falha ao instalar dependencias do backend
+    cd ..\..
     pause
     exit /b 1
 )
@@ -96,9 +97,10 @@ if not exist ".env" (
 REM Instalar dependências
 echo.
 echo Instalando dependencias do frontend...
-call npm install
+npm install
 if %errorlevel% neq 0 (
     echo [ERRO] Falha ao instalar dependencias do frontend
+    cd ..\..
     pause
     exit /b 1
 )
