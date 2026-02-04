@@ -5,8 +5,9 @@ import Dashboard from './components/Dashboard';
 import Funcionario from './components/funcionario';
 import Aeronaves from './components/aeronaves';
 import Login from './components/Login';
-import ProtectedRoute from './components/ProtectedRoute'; 
+import ProtectedRoute from './components/ProtectedRoute';
 import DetalheAeronave from './components/detalheAeronave';
+import { loadUser, saveUser, removeUser } from './utils/localStorage';
 
 const ROLES = {
   ADMIN: 'administrador',
@@ -15,31 +16,22 @@ const ROLES = {
 };
 
 function App() {
-  const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('aerocodeUser');
-    try {
-      return savedUser ? JSON.parse(savedUser) : null;
-    } catch (e) {
-      return null;
-    }
-  });
+  const [user, setUser] = useState(() => loadUser());
 
   useEffect(() => {
     if (user) {
-      localStorage.setItem('aerocodeUser', JSON.stringify(user));
+      saveUser(user);
     } else {
-      localStorage.removeItem('aerocodeUser');
+      removeUser();
     }
   }, [user]);
 
   const handleLogin = (userData) => {
-    console.log('Login userData:', userData);
     setUser(userData);
   };
 
   const handleLogout = () => {
     setUser(null);
-    localStorage.removeItem('aerocodeUser');
   };
 
   return (
@@ -52,19 +44,25 @@ function App() {
             path="/"
             element={<HomeLayout user={user} onLogout={handleLogout} />}
           >
-            <Route index element={<Navigate to="/dashboard" />} />
+            <Route index element={<Navigate to="/dashboard" replace />} />
             <Route
               path="dashboard"
               element={
-                <ProtectedRoute user={user} allowedRoles={[ROLES.ADMIN, ROLES.ENGENHEIRO, ROLES.OPERADOR]}>
-                  <Dashboard />
+                <ProtectedRoute
+                  user={user}
+                  allowedRoles={[ROLES.ADMIN, ROLES.ENGENHEIRO, ROLES.OPERADOR]}
+                >
+                  <Dashboard user={user} />
                 </ProtectedRoute>
               }
             />
             <Route
               path="funcionarios"
               element={
-                <ProtectedRoute user={user} allowedRoles={[ROLES.ADMIN, ROLES.ENGENHEIRO]}>
+                <ProtectedRoute
+                  user={user}
+                  allowedRoles={[ROLES.ADMIN, ROLES.ENGENHEIRO]}
+                >
                   <Funcionario user={user} />
                 </ProtectedRoute>
               }
@@ -72,13 +70,19 @@ function App() {
             <Route
               path="aeronaves"
               element={
-                <ProtectedRoute user={user} allowedRoles={[ROLES.ADMIN, ROLES.ENGENHEIRO, ROLES.OPERADOR]}>
+                <ProtectedRoute
+                  user={user}
+                  allowedRoles={[ROLES.ADMIN, ROLES.ENGENHEIRO, ROLES.OPERADOR]}
+                >
                   <Aeronaves user={user} />
                 </ProtectedRoute>
               }
             />
-            <Route path="detalheAeronave/:codigo" element={<DetalheAeronave user={user} />} />
-            <Route path="*" element={<Navigate to="/dashboard" />} />
+            <Route
+              path="detalheAeronave/:codigo"
+              element={<DetalheAeronave user={user} />}
+            />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Route>
         )}
       </Routes>

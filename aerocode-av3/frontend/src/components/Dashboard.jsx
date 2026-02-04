@@ -10,30 +10,18 @@ import {
   Cell,
 } from 'recharts';
 import { relatorioService } from '../services/api';
+import { formatarCargo } from '../utils/formatters';
+import { getBarColor } from '../utils/chartHelpers';
 import '../styles/dashboard.css';
 
 export default function Dashboard({ user }) {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [usuarioLogado, setUsuarioLogado] = useState(user || { nome: 'Colaborador', nivelPermissao: 'Visitante' });
 
   useEffect(() => {
-    if (!user) {
-      const storedUser = localStorage.getItem('aerocodeUser');
-      if (storedUser) {
-        try {
-          const parsedUser = JSON.parse(storedUser);
-          setUsuarioLogado(parsedUser);
-        } catch (error) {
-          console.error('Erro ao ler dados do usuário:', error);
-        }
-      }
-    } else {
-      setUsuarioLogado(user);
-    }
     carregarDashboard();
-  }, [user]);
+  }, []);
 
   const carregarDashboard = async () => {
     try {
@@ -42,16 +30,11 @@ export default function Dashboard({ user }) {
       const response = await relatorioService.dashboard();
       setStats(response.data);
     } catch (err) {
-      console.error(err);
+      console.error('Erro ao carregar dashboard:', err);
       setError('Erro ao carregar dashboard. Verifique a conexão com o servidor.');
     } finally {
       setLoading(false);
     }
-  };
-
-  const formatarCargo = (cargo) => {
-    if (!cargo) return '';
-    return cargo.charAt(0).toUpperCase() + cargo.slice(1).toLowerCase();
   };
 
   const chartData = useMemo(() => {
@@ -65,25 +48,6 @@ export default function Dashboard({ user }) {
 
   const totalAeronaves = stats?.totalAeronaves || 0;
   const etapasConcluidas = stats?.etapasConcluidas || 0;
-
-  const values = chartData.map((item) => item.etapasAtuais);
-  const minEtapas = values.length ? Math.min(...values) : 0;
-  const maxEtapas = values.length ? Math.max(...values) : 0;
-
-  const getBarColor = (value) => {
-    const minLightness = 80;
-    const maxLightness = 50;
-    const HUE = 24;
-    const SATURATION = 100;
-
-    if (maxEtapas === minEtapas) {
-      return `hsl(${HUE}, ${SATURATION}%, 50%)`;
-    }
-
-    const percent = (value - minEtapas) / (maxEtapas - minEtapas || 1);
-    const lightness = minLightness - percent * (minLightness - maxLightness);
-    return `hsl(${HUE}, ${SATURATION}%, ${lightness}%)`;
-  };
 
   if (loading) {
     return (
@@ -112,21 +76,18 @@ export default function Dashboard({ user }) {
             Visão geral das aeronaves, etapas e testes.
           </p>
         </div>
-        
+
         <div className="user-pill">
           <div className="user-avatar">
-            {usuarioLogado.nome ? usuarioLogado.nome.charAt(0).toUpperCase() : 'U'}
+            {user?.nome ? user.nome.charAt(0).toUpperCase() : 'U'}
           </div>
           <div className="user-info-text">
-            <span className="user-name">
-              {usuarioLogado.nome || 'Colaborador'}
-            </span>
+            <span className="user-name">{user?.nome || 'Colaborador'}</span>
             <span className="user-role">
-              {formatarCargo(usuarioLogado.nivelPermissao) || 'Usuário'}
+              {formatarCargo(user?.nivelPermissao) || 'Usuário'}
             </span>
           </div>
         </div>
-
       </header>
 
       <main className="dashboard-main">
@@ -156,9 +117,7 @@ export default function Dashboard({ user }) {
           <div className="chart-section">
             <div className="section-header">
               <h2>Progresso das Aeronaves</h2>
-              <span className="section-badge">
-                {chartData.length} modelos
-              </span>
+              <span className="section-badge">{chartData.length} modelos</span>
             </div>
 
             <div className="chart-wrapper">
@@ -205,7 +164,7 @@ export default function Dashboard({ user }) {
                       {chartData.map((entry, index) => (
                         <Cell
                           key={`cell-${index}`}
-                          fill={getBarColor(entry.etapasAtuais)}
+                          fill={getBarColor(entry.etapasAtuais, chartData)}
                         />
                       ))}
                     </Bar>

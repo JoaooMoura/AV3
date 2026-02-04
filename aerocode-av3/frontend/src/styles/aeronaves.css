@@ -148,3 +148,24 @@
   font-style: italic;
   margin-top: 40px;
 }
+
+.page-subtitle {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.td-codigo {
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+.th-actions {
+  text-align: right;
+}
+
+.actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+}

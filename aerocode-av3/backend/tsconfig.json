@@ -14,6 +14,6 @@
     "declarationMap": true,
     "sourceMap": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../frontend/src/utils/formatters.js"],
   "exclude": ["node_modules", "dist"]
 }

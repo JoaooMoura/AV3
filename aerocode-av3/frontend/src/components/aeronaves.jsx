@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { aeronaveService } from '../services/api';
-import ModalCadAero from '../components/modals/ModalCadAero'; 
+import ModalCadAero from '../components/modals/ModalCadAero';
 import '../styles/aeronaves.css';
 import { MdAdd, MdVisibility, MdDelete } from 'react-icons/md';
 
@@ -19,10 +19,11 @@ function Aeronaves({ user }) {
   const carregarAeronaves = async () => {
     try {
       setLoading(true);
+      setError('');
       const response = await aeronaveService.listar();
       setAeronaves(response.data);
     } catch (err) {
-      console.error(err);
+      console.error('Erro ao carregar aeronaves:', err);
       setError('Erro ao carregar aeronaves');
     } finally {
       setLoading(false);
@@ -35,6 +36,7 @@ function Aeronaves({ user }) {
       await aeronaveService.deletar(id);
       setAeronaves(aeronaves.filter((a) => a.id !== id));
     } catch (err) {
+      console.error('Erro ao excluir:', err);
       alert('Erro ao excluir aeronave');
     }
   };
@@ -47,19 +49,32 @@ function Aeronaves({ user }) {
   const podeAdicionar = user?.nivel === 'administrador' || user?.nivel === 'engenheiro';
   const podeExcluir = user?.nivel === 'administrador';
 
-  if (loading) return <div className="aeronaves-container"><div className="loading">Carregando...</div></div>;
-  if (error) return <div className="aeronaves-container"><div className="error">{error}</div></div>;
+  if (loading) {
+    return (
+      <div className="aeronaves-container">
+        <div className="loading">Carregando...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="aeronaves-container">
+        <div className="error">{error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="aeronaves-container">
       <div className="page-header">
         <div>
           <h1>Gestão de Aeronaves</h1>
-          <p style={{color: '#9ca3af', margin: 0}}>Frota completa registrada no sistema.</p>
+          <p className="page-subtitle">Frota completa registrada no sistema.</p>
         </div>
         {podeAdicionar && (
           <button className="btn-adicionar" onClick={() => setShowModal(true)}>
-            <MdAdd size={20}/>
+            <MdAdd size={20} />
             <span>Adicionar</span>
           </button>
         )}
@@ -76,13 +91,13 @@ function Aeronaves({ user }) {
               <th>Fabricante</th>
               <th>Tipo</th>
               <th>Status</th>
-              <th style={{textAlign: 'right'}}>Ações</th>
+              <th className="th-actions">Ações</th>
             </tr>
           </thead>
           <tbody>
             {aeronaves.map((aeronave) => (
               <tr key={aeronave.id}>
-                <td style={{fontWeight: 'bold', color: '#fff'}}>{aeronave.codigo}</td>
+                <td className="td-codigo">{aeronave.codigo}</td>
                 <td>{aeronave.modelo}</td>
                 <td>{aeronave.fabricante}</td>
                 <td>{aeronave.tipo}</td>
@@ -92,12 +107,22 @@ function Aeronaves({ user }) {
                   </span>
                 </td>
                 <td>
-                  <div className="actions" style={{justifyContent: 'flex-end'}}>
-                    <button className="btn-visualizar" onClick={() => navigate(`/detalheAeronave/${aeronave.codigo}`)} title="Ver detalhes">
+                  <div className="actions">
+                    <button
+                      className="btn-visualizar"
+                      onClick={() => navigate(`/detalheAeronave/${aeronave.codigo}`)}
+                      title="Ver detalhes"
+                      aria-label="Ver detalhes"
+                    >
                       <MdVisibility size={18} />
                     </button>
                     {podeExcluir && (
-                      <button className="btn-excluir" onClick={() => excluirAeronave(aeronave.id)} title="Excluir">
+                      <button
+                        className="btn-excluir"
+                        onClick={() => excluirAeronave(aeronave.id)}
+                        title="Excluir"
+                        aria-label="Excluir aeronave"
+                      >
                         <MdDelete size={18} />
                       </button>
                     )}
