@@ -3,7 +3,7 @@ import { CreateEtapaDto } from '../types';
 
 export class EtapaService {
   async criar(data: CreateEtapaDto) {
-    const aeronaveId = parseInt(data.aeronaveId);
+    const aeronaveId = parseInt(data.aeronaveId as any);
     
     const aeronave = await prisma.aeronave.findUnique({
       where: { id: aeronaveId }
@@ -92,7 +92,7 @@ export class EtapaService {
   async atualizarStatus(etapaId: number, status: string) {
     return await prisma.etapa.update({
       where: { id: etapaId },
-      data: { status: status },
+      data: { status: status as any },
       include: {
         aeronave: true,
         funcionarios: true
